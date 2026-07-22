@@ -13,9 +13,6 @@ from .models import Image
 from .serializers import ImageSerializer
 
 
-
-
-
 class ImageUploadView(generics.CreateAPIView):
 
     serializer_class = ImageSerializer
@@ -35,8 +32,8 @@ class ImageUploadView(generics.CreateAPIView):
             file_size=uploaded_file.size,
             image_format=img.format,
         )
-        
-        
+
+
 class ResizeImageView(APIView):
 
     permission_classes = [IsAuthenticated]
@@ -56,9 +53,8 @@ class ResizeImageView(APIView):
         height = int(request.data.get("height"))
         if width is None or height is None:
             return Response(
-                {"error": "Both width and height are required."},
-                status=400
-                )
+                {"error": "Both width and height are required."}, status=400
+            )
 
         width = int(width)
         height = int(height)
@@ -98,14 +94,16 @@ class ResizeImageView(APIView):
                 "status": image.status,
             }
         )
-        
+
+
 class ImageListView(generics.ListAPIView):
     serializer_class = ImageSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Image.objects.filter(user=self.request.user).order_by("-created_at")
-    
+
+
 class ImageDetailView(generics.RetrieveAPIView):
 
     serializer_class = ImageSerializer
@@ -115,7 +113,8 @@ class ImageDetailView(generics.RetrieveAPIView):
         print("Logged in user:", self.request.user.id)
         print(Image.objects.values("id", "user_id"))
         return Image.objects.filter(user=self.request.user)
-    
+
+
 class ImageDeleteView(generics.DestroyAPIView):
 
     serializer_class = ImageSerializer
