@@ -6,6 +6,7 @@ from PIL import Image as PILImage
 
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
 
 
 from .models import Image
@@ -48,7 +49,7 @@ class ResizeImageView(APIView):
         except Image.DoesNotExist:
             return Response(
                 {"error": "Image not found"},
-                status=STATUS.HTTP_404_NOT_FOUND,
+                status=status.HTTP_404_NOT_FOUND,
             )
 
         width = int(request.data.get("width"))

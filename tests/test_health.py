@@ -1,7 +1,6 @@
 from django.test import TestCase
 
 
-class HealthTest(TestCase):
-
-    def test_true(self):
+class ImageTest(TestCase):
+    def test_dummy(self):
         self.assertTrue(True)
