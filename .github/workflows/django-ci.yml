@@ -32,3 +32,15 @@ jobs:
       - name: Django System Check
         run: |
           python manage.py check
+          
+      - name: Run Ruff
+        run: |
+         ruff check .
+
+      - name: Check Formatting
+        run: |
+          black --check .
+
+      - name: Run Tests
+        run: |
+          pytest
