@@ -11,11 +11,34 @@ on:
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
 
-    steps:
+    services:
+      postgres:
+        image: postgres:16
 
+        env:
+          POSTGRES_DB: image_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 293007
+
+        ports:
+          - 5432:5432
+
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DB_NAME: image_db
+      DB_USER: postgres
+      DB_PASSWORD: 293007
+      DB_HOST: localhost
+      DB_PORT: 5432
+
+    steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -29,13 +52,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Apply Migrations
+        run: |
+          python manage.py migrate
+
       - name: Django System Check
         run: |
           python manage.py check
-          
+
       - name: Run Ruff
         run: |
-         ruff check .
+          ruff check .
 
       - name: Check Formatting
         run: |
